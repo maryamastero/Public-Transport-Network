@@ -88,7 +88,7 @@ def compute_measures(city):
     output['Degree distribution'] = [net.degree(node) for node in nx.nodes(net)]
     output['Clustering coeficient'] = list(nx.clustering(net).values())
     
-    temp_file = open(f"../logcspace/{city}.json", "w")
+    temp_file = open(f"../Results/cspace/{city}.json", "w")
     json.dump(output, temp_file)
     temp_file.close()
     
