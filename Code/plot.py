@@ -66,9 +66,9 @@ def plot_degree_clustering(degrees,clusteringvec, markers, labels):
 #%% List of 27 cities
 def get_list_cities_names():
     cities = ['adelaide', 'antofagasta', 'athens', 'belfast', 'berlin', 'bordeaux', 'brisbane', 'canberra',
-              'detroit', 'dublin', 'grenoble', 'helsinki', 'kuopio', 'lisbon', 'luxembourg', 
-              'nantes', 'palermo', 'paris', 'prague', 'rennes', 'rome',  'turku',
-              'venice', 'winnipeg']#'melbourne','sydney', 'toulouse',
+              'detroit', 'dublin', 'grenoble', 'helsinki', 'kuopio', 'lisbon', 'luxembourg', 'melbourne',
+              'nantes', 'palermo', 'paris', 'prague', 'rennes', 'rome', 'sydney', 'toulouse', 'turku',
+              'venice', 'winnipeg']
     return cities
 
 #%%
