@@ -10,6 +10,6 @@ if __name__ == '__main__':
             data = json.load(json_file)
             glob_data.append(data)
             
-    with open('../Results/network_measures_pspace.json', 'w') as f:
+    with open('../Results/All_cities/pspace.json', 'w') as f:
         json.dump(glob_data, f)
             
