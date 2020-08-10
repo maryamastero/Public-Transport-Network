@@ -1,4 +1,6 @@
 import networkx as nx
+import pandas as pd
+from collections import Counter
 import json
 from multiprocessing import Pool
 
@@ -31,7 +33,7 @@ def create_random_network(city):
 def compute_measures(city):
     
     out = {}
-    temp_file0 = open(f"../Results/lspace_random/temp_{city}.json", "w")
+    temp_file0 = open(f"../Results/random/lspace/{city}/temp_{city}.json", "w")
     json.dump(out, temp_file0)
     temp_file0.close()
 
@@ -50,20 +52,8 @@ def compute_measures(city):
     output['Degree distribution'] = [net.degree(node) for node in nx.nodes(net)]
     output['Clustering coeficient'] = list(nx.clustering(net).values())
     
-    temp_file = open(f"../Results/lspace_random/{city}.json", "w")
+    temp_file = open(f"../Results/random/lspace/{city}/{city}.json", "w")
     json.dump(output, temp_file)
     temp_file.close()
     
     return output
-#%% lspace calculation for whole data set 
-
-if __name__ == '__main__':
-    
-    cities = get_list_cities_names() 
- 
-    pool = Pool(4)
-    network_measures = pool.map(compute_measures,cities)
-    pool.close()
-    pool.join()
-    
-    
