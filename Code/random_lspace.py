@@ -1,8 +1,5 @@
 import networkx as nx
-import pandas as pd
-from collections import Counter
 import json
-from multiprocessing import Pool
 
 #%% List of 27 cities
 def get_list_cities_names():
@@ -23,10 +20,11 @@ def create_random_network(city):
         degree_sequence = json.load(f)['Degree distribution']
 
    
-    net = nx.configuration_model(degree_sequence)
-    
+    G = nx.configuration_model(degree_sequence)
+    G=nx.Graph(G)
+    G.remove_edges_from(G.selfloop_edges())
 
-    return net
+    return G
 
 #%% Calculate network measure for each city
 
@@ -57,3 +55,14 @@ def compute_measures(city):
     temp_file.close()
     
     return output
+
+
+#%% lspace calculation for whole data set 
+
+if __name__ == '__main__':
+    
+    cities = get_list_cities_names() 
+    
+    network_measures = {}
+    for city in cities:
+        network_measures[city] = compute_measures(city)
