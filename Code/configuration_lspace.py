@@ -45,14 +45,11 @@ def compute_measures(city):
     return output
 
 
-#%% lspace calculation for whole data set 
+#%% configuration model using degree distribution in lspace 
 
 if __name__ == '__main__':
     
-    city = sys.argv[1]
+    city = sys.argv[1] #getting city name from user or bash script
     network_measures = compute_measures(city)
     print(network_measures)
-    temp_file = open(f"../Results/random/lspace/{city}/{city}.json", "w")
-    json.dump(network_measures, temp_file)
-    temp_file.close()
-           
+    

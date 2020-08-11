@@ -1,10 +1,17 @@
-#!/bin/bash 
- cities=('kuopio''nantes') 
- for city in 'kuopio' 'nantes'
+#!/bin/bash
+#SBATCH --job-name=random_lspace
+#SBATCH --array=1-2700
+#SBATCH --time=5-00:00:00
+#SBATCH --mem-per-cpu=1G
+
+
+module load anaconda
+
+ for city in 'adelaide' 'antofagasta' 'athens' 'belfast' 'berlin' 'bordeaux' 'brisbane' 'canberra' 'detroit' 'dublin' 'grenoble' 'helsinki' '$
  do
-	for i in {1..5..1}
-	do
-                 echo "$city" " $i"
-		python3 random_lspace.py  "$city" > ../Results/random/lspace/"$city"/"city"_"$i".json
-	done 
+        for i in {1..100..1}
+        do
+               srun  python3 random_lspace.py  "$city" > Results/random/lspace/"$city"/"$city"_"$i".json
+        done
 done
+
