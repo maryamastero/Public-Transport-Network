@@ -1,14 +1,6 @@
 import networkx as nx
 import json
-
-#%% List of 27 cities
-def get_list_cities_names():
-    cities = ['adelaide', 'antofagasta', 'athens', 'belfast', 'berlin', 'bordeaux', 'brisbane', 'canberra',
-              'detroit', 'dublin', 'grenoble', 'helsinki', 'kuopio', 'lisbon', 'luxembourg', 'melbourne',
-              'nantes', 'palermo', 'paris', 'prague', 'rennes', 'rome', 'sydney', 'toulouse', 'turku',
-              'venice', 'winnipeg']
-    return cities
-
+import sys
 #%% Creating network 
         
 def create_random_network(city):
@@ -20,11 +12,11 @@ def create_random_network(city):
         degree_sequence = json.load(f)['Degree distribution']
 
    
-    G = nx.configuration_model(degree_sequence)
-    G=nx.Graph(G)
-    G.remove_edges_from(G.selfloop_edges())
+    net = nx.configuration_model(degree_sequence)
+    net=nx.Graph(net)
+    net.remove_edges_from(nx.selfloop_edges(net))
 
-    return G
+    return net
 
 #%% Calculate network measure for each city
 
@@ -34,7 +26,7 @@ def compute_measures(city):
     temp_file0 = open(f"../Results/random/lspace/{city}/temp_{city}.json", "w")
     json.dump(out, temp_file0)
     temp_file0.close()
-
+    
     net = create_random_network(city)
     output = {}
     GCC = max((net.subgraph(c) for c in nx.connected_components(net)), key=len) # Giant component 
@@ -50,10 +42,6 @@ def compute_measures(city):
     output['Degree distribution'] = [net.degree(node) for node in nx.nodes(net)]
     output['Clustering coeficient'] = list(nx.clustering(net).values())
     
-    temp_file = open(f"../Results/random/lspace/{city}/{city}.json", "w")
-    json.dump(output, temp_file)
-    temp_file.close()
-    
     return output
 
 
@@ -61,8 +49,10 @@ def compute_measures(city):
 
 if __name__ == '__main__':
     
-    cities = get_list_cities_names() 
-    
-    network_measures = {}
-    for city in cities:
-        network_measures[city] = compute_measures(city)
+    city = sys.argv[1]
+    network_measures = compute_measures(city)
+    print(network_measures)
+    temp_file = open(f"../Results/random/lspace/{city}/{city}.json", "w")
+    json.dump(network_measures, temp_file)
+    temp_file.close()
+           
