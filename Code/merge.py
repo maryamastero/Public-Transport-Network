@@ -12,4 +12,4 @@ if __name__ == '__main__':
             
     with open('../Results/All_cities/pspace.json', 'w') as f:
         json.dump(glob_data, f)
-            
+

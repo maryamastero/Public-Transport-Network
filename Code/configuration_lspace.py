@@ -21,12 +21,7 @@ def create_random_network(city):
 #%% Calculate network measure for each city
 
 def compute_measures(city):
-    
-    out = {}
-    temp_file0 = open(f"../Results/random/lspace/{city}/temp_{city}.json", "w")
-    json.dump(out, temp_file0)
-    temp_file0.close()
-    
+
     net = create_random_network(city)
     output = {}
     GCC = max((net.subgraph(c) for c in nx.connected_components(net)), key=len) # Giant component 
