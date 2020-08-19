@@ -26,13 +26,13 @@ def plot_ccdfs(uniq_degs,datavecs,markers, labels, space):
     fig = plt.figure(figsize=(15,10)) 
     ax = fig.add_subplot(111)
     for x_values, y_values, marker, label  in zip(uniq_degs,datavecs, markers, labels):    
-        ax.loglog(x_values, y_values, marker, label = label, linestyle="solid") 
+        ax.semilogy(x_values, y_values, marker, label = label, linestyle="solid") 
 
     ax.set_xlabel('Degree' ) 
     ax.set_ylabel('1-CDF degree') 
     ax.legend(loc='best')
     ax.set_title(f'Degree distribution in {space}')
-    plt.savefig(f"../Results/graph/Degree_distribution_{space}.pdf", dpi=150)
+    plt.savefig(f"../Results/graph/Degree_distribution_semilogy_{space}.pdf", dpi=150)
 
 
     plt.show()
@@ -49,7 +49,7 @@ def all_space_plot_ccdfs(uniq_degs,datavecs,markers, labels, spaces,colors):
     fig, ax = plt.subplots(1, 3, figsize=(25, 10))  
     for i, space in enumerate(spaces):
         for x_values, y_values, marker, label ,color in zip(uniq_degs[i],datavecs[i], markers, labels,colors):    
-            ax[i].loglog(x_values, y_values, marker, label = label, linestyle="solid", color = color) 
+            ax[i].semilogy(x_values, y_values, marker, label = label, linestyle="solid", color = color) 
 
         ax[i].set_xlabel('Degree' ) 
         ax[i].set_ylabel('1-CDF degree') 
@@ -59,7 +59,7 @@ def all_space_plot_ccdfs(uniq_degs,datavecs,markers, labels, spaces,colors):
     ax[2].set_position([box.x0, box.y0, box.width * 0.8, box.height])
     ax[2].legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
-    plt.savefig(f"../Results/graph/Degree_distribution.pdf", dpi=150)
+    plt.savefig(f"../Results/graph/Degree_distribution_semilog.pdf", dpi=150)
 
 
     plt.show()
