@@ -98,7 +98,7 @@ def get_list_cities_names():
     return cities
 
 #%%
-def plot_node_network_measures(number_of_nodes,network_measures,markers, labels, colors,space, measure_name, style = None ):
+def plot_node_network_measures(number_of_nodes,network_measures,markers, labels, colors,space, measure_name ):
     '''
     Plots in a single figure network measures as function of node for each city 
     
@@ -107,47 +107,27 @@ def plot_node_network_measures(number_of_nodes,network_measures,markers, labels,
     ax = fig.add_subplot(111)
     box = ax.get_position()
     ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
-    if style == 'semilog':
-        for x_values, y_values, marker, label,color  in zip(number_of_nodes,network_measures, markers, labels,colors):    
-            ax.semilogx(x_values, float(y_values), marker, label = label, markersize=12,color =color) 
-        
-        ax.set_xlabel('Number Of Nodes' ) 
-        if measure_name == 'ave_clustering':
-            ax.set_ylabel('Average Clustering Coefficient') 
-            ax.set_title(f'Clustering Coefficient as Function of Number of nodes  in {space}')
-        if measure_name == 'ave_shortest_path':
-            ax.set_ylabel('Average Shortest Path') 
-            ax.set_title(f'Average Shortest Path as Function of Number of nodes  in {space}')
-        if measure_name =='assortativity': 
-            ax.set_ylabel('Assortativity') 
-            ax.set_title(f'Assortativity as Function of Number of nodes  in {space}')
-        if measure_name == 'ave_degree':
-            ax.set_ylabel('Average degree') 
-            ax.set_title(f'Average degree as Function of Number of nodes  in {space}')
-        ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
-        plt.savefig(f"../Results/graph/semilog_{measure_name}_{space}.pdf", dpi=150)
-    else:
-        
-        for x_values, y_values, marker, label ,color  in zip(number_of_nodes,network_measures, markers, labels,colors):    
-            ax.plot(x_values, float(y_values), marker, label = label, markersize=12, color = color) 
     
-        ax.set_xlabel('Number Of Nodes' ) 
-        if measure_name == 'ave_clustering':
-            ax.set_ylabel('Average Clustering Coefficient') 
-            ax.set_title(f'Clustering Coefficient as Function of Number of nodes  in {space}')
-        if measure_name == 'ave_shortest_path':
-            ax.set_ylabel('Average Shortest Path') 
-            ax.set_title(f'Average Shortest Path as Function of Number of nodes  in {space}')
-        if measure_name =='assortativity': 
-            ax.set_ylabel('Assortativity') 
-            ax.set_title(f'Assortativity as Function of Number of nodes  in {space}')  
-        if measure_name == 'ave_degree':
-            ax.set_ylabel('Average degree') 
-            ax.set_title(f'Average degree as Function of Number of nodes  in {space}')   
-        ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
-        plt.savefig(f"../Results/graph/{measure_name}_{space}.pdf", dpi=150)
+    for x_values, y_values, marker, label ,color  in zip(number_of_nodes,network_measures, markers, labels,colors):    
+        ax.plot(x_values, float(y_values), marker, label = label, markersize=12, color = color) 
 
-    
+    ax.set_xlabel('Number Of Nodes' ) 
+    if measure_name == 'ave_clustering':
+        ax.set_ylabel('Average Clustering Coefficient') 
+        ax.set_title(f'Clustering Coefficient as Function of Number of nodes  in {space}')
+    if measure_name == 'ave_shortest_path':
+        ax.set_ylabel('Average Shortest Path') 
+        ax.set_title(f'Average Shortest Path as Function of Number of nodes  in {space}')
+    if measure_name =='assortativity': 
+        ax.set_ylabel('Assortativity') 
+        ax.set_title(f'Assortativity as Function of Number of nodes  in {space}')  
+    if measure_name == 'ave_degree':
+        ax.set_ylabel('Average degree') 
+        ax.set_title(f'Average degree as Function of Number of nodes  in {space}')   
+    ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+    plt.savefig(f"../Results/graph/{measure_name}_{space}.pdf", dpi=150)
+
+
     plt.show()
 
 
@@ -249,17 +229,12 @@ if __name__ == '__main__':
         plot_ccdfs(uniq_degs,normalized_deg_dists, markers,labels,space)
         plot_degree_clustering(degree_dist_cities,cities_clustering,markers, labels,space)
             
-        plot_node_network_measures(number_of_nodes,ave_shortest_path,markers, labels, colors, space, 'ave_shortest_path' ,style = 'semilog')
-        plot_node_network_measures(number_of_nodes,ave_shortest_path,markers, labels,  colors,space, 'ave_shortest_path')
+        plot_node_network_measures(number_of_nodes,ave_shortest_path,markers, labels,  colors,space, 'ave_shortest_path')       
         
-        
-        plot_node_network_measures(number_of_nodes,ave_clustering,markers, labels, colors, space, 'ave_clustering', style = 'semilog')
         plot_node_network_measures(number_of_nodes,ave_clustering,markers, labels,  colors,space, 'ave_clustering')
         
-        plot_node_network_measures(number_of_nodes,cities_assortativity ,markers, labels, colors,space,'assortativity', style = 'semilog')
         plot_node_network_measures(number_of_nodes,cities_assortativity ,markers, labels, colors,space, 'assortativity')
         
-        plot_node_network_measures(number_of_nodes,ave_degree  ,markers, labels, colors,space,'ave_degree', style = 'semilog')
         plot_node_network_measures(number_of_nodes,ave_degree  ,markers, labels, colors,space, 'ave_degree')
         
     all_space_plot_ccdfs(all_space_uniq_degs,all_space_normalized_deg_dists,markers, labels, spaces,colors)     
