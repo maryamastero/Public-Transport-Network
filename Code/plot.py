@@ -46,20 +46,20 @@ def all_space_plot_ccdfs(uniq_degs,datavecs,markers, labels, spaces,colors):
     Plots in a single figure the complementary cumulative distributions
     
     '''
-    fig, ax = plt.subplots(1, 3, figsize=(25, 10))  
+    fig, ax = plt.subplots(1, 3, figsize=(25, 10), sharey = True)  
     for i, space in enumerate(spaces):
         for x_values, y_values, marker, label ,color in zip(uniq_degs[i],datavecs[i], markers, labels,colors):    
-            ax[i].semilogy(x_values, y_values, marker, label = label, linestyle="solid", color = color) 
+            ax[i].loglog(x_values, y_values, marker, label = label, linestyle="solid", color = color) 
 
         ax[i].set_xlabel('Degree' ) 
-        ax[i].set_ylabel('1-CDF degree') 
+        
         ax[i].set_title(f'Complementary cumulative degree distribution in {space}')
-   
+    ax[0].set_ylabel('1-CDF degree') 
     box = ax[2].get_position() 
     ax[2].set_position([box.x0, box.y0, box.width * 0.8, box.height])
     ax[2].legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
-    plt.savefig(f"../Results/graph/Degree_distribution_semilog.pdf", dpi=150)
+    plt.savefig(f"../Results/graph/Degree_distribution_loglog.pdf", dpi=150)
 
 
     plt.show()
@@ -145,16 +145,16 @@ def all_space_plot_node_network_measures(number_of_nodes,measure,markers, labels
         ax[i].set_xlabel('Number Of Nodes' )         
         
         if measure_name == 'ave_clustering':
-            ax[i].set_ylabel('Average Clustering Coefficient') 
+            ax[0].set_ylabel('Average Clustering Coefficient') 
             ax[i].set_title(f'Clustering Coefficient as Function of \n Number of nodes  in {space}')
         if measure_name == 'ave_shortest_path':
-            ax[i].set_ylabel('Average Shortest Path') 
+            ax[0].set_ylabel('Average Shortest Path') 
             ax[i].set_title(f'Average Shortest Path as Function of \n Number of nodes  in {space}')
         if measure_name =='assortativity': 
-            ax[i].set_ylabel('Assortativity') 
+            ax[0].set_ylabel('Assortativity') 
             ax[i].set_title(f'Assortativity as Function of \n Number of nodes  in {space}')  
         if measure_name == 'ave_degree':
-            ax[i].set_ylabel('Average degree') 
+            ax[0].set_ylabel('Average degree') 
             ax[i].set_title(f'Average degree as Function of \n Number of nodes  in {space}')   
     box = ax[2].get_position() 
     ax[2].set_position([box.x0, box.y0, box.width * 0.8, box.height])
