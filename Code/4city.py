@@ -63,7 +63,7 @@ if __name__=='__main__':
 #       'venice', 'winnipeg']
 # =============================================================================
     Bsl = []  
-    fig,ax = plt.subplots(2, 2,figsize=(8,8), sharey = True, sharex= True)
+    fig,ax = plt.subplots(2, 2, sharey = True, sharex= True)
     ax = ax.flatten()
     for j, city in enumerate(cities):   
         network_measures = []	
@@ -78,79 +78,21 @@ if __name__=='__main__':
         (A, B) = fit_exp(uniq_deg, normalized_deg_dist)
         Bsl.append(B)
         ax[j].loglog(uniq_deg, normalized_deg_dist, 'o-', label='Real Data', color = 'red')
-        ax[j].loglog(uniq_deg, [A * np.exp(B *x) for x in uniq_deg], 'o-', label='Fit', color = 'skyblue')
-        ax[j].set_title(f'Degree distribution in {city}', fontsize=10)    
+        ax[j].loglog(uniq_deg, [A *  np.exp(x*B) for x in uniq_deg], 'o-', label='Fit', color = 'skyblue')# np.power(x,B)
+        ax[j].set_title(f'Degree distribution \n in {city}', fontsize=10)    
        
                 
-   
+    #plt.legend(bbox_to_anchor=(1.25, 2.25), loc='upper left', borderaxespad=0., fancybox=True)
+    handles, labels = ax[1].get_legend_handles_labels()
+    fig.legend(handles, labels, bbox_to_anchor=(0.97, 0.85), loc='upper left', borderaxespad=0., fancybox=True)
     ax[2].set_xlabel('Degree' ) 
     ax[3].set_xlabel('Degree' ) 
 
     ax[0].set_ylabel('1-CDF degree') 
     ax[2].set_ylabel('1-CDF degree') 
-    plt.tight_layout()
-    st = fig.suptitle("Fitting exponential distribution to degree distribution in Cspace", fontsize="x-large", verticalalignment = 'baseline')
-    st.set_y(1.0)
-   
-    plt.legend(bbox_to_anchor=(1.05, 2.25), loc='upper left', borderaxespad=0., fancybox=True)
     
-        
-    plt.show()
-
-         
-# =============================================================================
-#     Bsp = []     
-#     for j, city in enumerate(cities):   
-#         network_measures = []	
-#         with open(f'../Results/pspace/{city}.json', 'r') as f:	
-#             s = f.read()	
-#             s = s.replace('\'','\"')	
-#             data = json.loads(s)          	
-#             network_measures.append(data) 	
-# 
-#         uniq_deg, normalized_deg_dist = ccdf(network_measures[0]['Degree distribution'])
-#    
-# 
-#         fig = plt.figure() 
-#         ax = fig.add_subplot(111)
-#         (A, B) = fit_exp(uniq_deg, normalized_deg_dist)
-#         Bsp.append(B)
-#         plt.semilogy(uniq_deg, normalized_deg_dist, 'o-', label='Raw Data')
-#         plt.semilogy(uniq_deg, [A * np.exp(B *x) for x in uniq_deg], 'o-', label='Fit')
-#         
-#         ax.set_xlabel('Degree' ) 
-#         ax.set_ylabel('1-CDF degree') 
-#         ax.legend(loc='best')
-#         ax.set_title(f'Degree distribution in {city}')
-#         plt.legend(loc='best')
-#         plt.tight_layout()
-#         plt.show()
-#         
-#         
-#     Bsc = []     
-#     for j, city in enumerate(cities):   
-#         network_measures = []	
-#         with open(f'../Results/cspace/{city}.json', 'r') as f:	
-#             s = f.read()	
-#             s = s.replace('\'','\"')	
-#             data = json.loads(s)          	
-#             network_measures.append(data) 	
-# 
-#         uniq_deg, normalized_deg_dist = ccdf(network_measures[0]['Degree distribution'])
-#    
-# 
-#         fig = plt.figure() 
-#         ax = fig.add_subplot(111)
-#         (A, B) = fit_exp(uniq_deg, normalized_deg_dist)
-#         Bsc.append(B)
-#         plt.plot(uniq_deg, normalized_deg_dist, 'o-', label='Raw Data')
-#         plt.plot(uniq_deg, [A * np.exp(B *x) for x in uniq_deg], 'o-', label='Fit')
-#         
-#         ax.set_xlabel('Degree' ) 
-#         ax.set_ylabel('1-CDF degree') 
-#         ax.legend(loc='best')
-#         ax.set_title(f'Degree distribution in {city}')
-#         plt.legend(loc='best')
-#         plt.tight_layout()
-#         plt.show()
-# =============================================================================
+    plt.tight_layout()
+    
+    plt.savefig(f"../Results/graph/fit_cspace.pdf", dpi=150)   
+    
+    

@@ -2,7 +2,6 @@ import networkx as nx
 import pandas as pd
 from collections import Counter
 import json
-from multiprocessing import Pool
 
 #%% Transportation type
 
@@ -62,58 +61,31 @@ def create_network(city):
 
 #%% Count transport types
     
-def transport_count_type(net):
+def transport_count_type(city):
     '''
     Represents number of different transportation types
     
     '''
-    print(Counter(nx.get_edge_attributes(net, 'type').values()))
-
-#%% Calculate network measure for each city
-
-def compute_measures(city):
 
     net = create_network(city)
-    output = {}
-    GCC = max((net.subgraph(c) for c in nx.connected_components(net)), key=len) # Giant component 
-    output['Number of nodes'] = nx.number_of_nodes(net) #Number of nodes
-    output['Number of edges'] = nx.number_of_edges(net) #Number of edges
-    output['Network density'] = "%.2f"% nx.density(net) #Network density
-    output['Network diameter'] = nx.diameter(GCC) #Network diameter
-    output['Average shortest path'] = "%.2f"% nx.average_shortest_path_length(GCC) #Average shortest path
-    output['Average clustering coefficient'] = "%.2f"% nx.average_clustering(net, count_zeros=True) #Average clustering coefficient
-    output['Average degree'] = "%.2f"% (2*net.number_of_edges() / float(net.number_of_nodes())) #Average degree
-    output['Number of components in the network'] = len(list(net.subgraph(c) for c in nx.connected_components(net))) # Number of component in the network
-    output['Assortativity'] = "%.2f"% nx.degree_assortativity_coefficient(net) #Assortativity
-    output['Degree distribution'] = [net.degree(node) for node in nx.nodes(net)]
-    output['Clustering coeficient'] = list(nx.clustering(net).values())
+    return(Counter(nx.get_edge_attributes(net, 'type').values()))
     
-    temp_file = open(f"../Results/lspace/{city}.json", "w")
-    json.dump(output, temp_file)
-    temp_file.close()
-    
-    return output
-
 #%% lspace calculation for whole data set 
 
 if __name__ == '__main__':
     
     cities = get_list_cities_names() 
     
-    network_measures = {}
-    for city in cities:
-        network_measures[city] = compute_measures(city)
+    transport_types = {}
     
-# =============================================================================
-#     pool = Pool(4)
-#     network_measures = pool.map(compute_measures,cities)
-#     pool.close()
-#     pool.join()
-#     
-# =============================================================================
+    for city in cities:
+        print(city)
+        net = create_network(city)
+        transport_types[city] = transport_count_type(city)
+    
     
 #%% Making jon file for outputs:
 
-    network_measures_file = open("../Results/network_measures_lspace.json", "w")
-    json.dump(network_measures, network_measures_file)
-    network_measures_file.close()
+    transport_type_file = open("../Results/transport_alternatives.json", "w")
+    json.dump(transport_types, transport_type_file)
+    transport_type_file.close()

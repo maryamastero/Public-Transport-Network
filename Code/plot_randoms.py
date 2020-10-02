@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import json
 import numpy as np
-
+import seaborn as sns
 
 #%% List of 27 cities
 def get_list_cities_names():
@@ -17,7 +17,7 @@ def plot_node_network_measures(number_of_nodes,network_measures,markers, labels,
     Plots in a single figure network measures as function of node for each city 
     
     '''
-    fig = plt.figure(figsize=(15,10)) 
+    fig = plt.figure(figsize=(10,8)) 
     ax = fig.add_subplot(111)
     box = ax.get_position()
     ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
@@ -25,21 +25,23 @@ def plot_node_network_measures(number_of_nodes,network_measures,markers, labels,
     for x_values, y_values, marker, label ,color  in zip(number_of_nodes,network_measures, markers, labels,colors):    
         ax.plot(x_values, float(y_values), marker, label = label, markersize=12, color = color) 
 
-    ax.set_xlabel('Number Of Nodes' ) 
+    ax.set_xlabel('Number Of Nodes' , fontsize='xx-large') 
     if measure_name == 'ave_clustering':
-        ax.set_ylabel('Average Clustering Coefficient') 
-        ax.set_title(f'Clustering Coefficient as Function of Number of nodes  using configuration model in {space} ')
+        ax.set_ylabel('Average Clustering Coefficient', fontsize='xx-large') 
+      #  ax.set_title(f'Clustering Coefficient as Function of Number of nodes  using configuration model in {space} ')
     if measure_name == 'ave_shortest_path':
-        ax.set_ylabel('Average Shortest Path') 
-        ax.set_title(f'Average Shortest Path as Function of Number of nodes using configuration model in {space}')
+        ax.set_ylabel('Average Shortest Path', fontsize='xx-large') 
+      #  ax.set_title(f'Average Shortest Path as Function of Number of nodes using configuration model in {space}')
     if measure_name =='assortativity': 
-        ax.set_ylabel('Assortativity') 
-        ax.set_title(f'Assortativity as Function of Number of nodes using configuration model in {space}')  
+        ax.set_ylabel('Assortativity', fontsize='xx-large') 
+       # ax.set_title(f'Assortativity as Function of Number of nodes using configuration model in {space}')  
     if measure_name == 'ave_degree':
-        ax.set_ylabel('Average degree') 
-        ax.set_title(f'Average degree as Function of Number of nodes using configuration model in {space}')   
+        ax.set_ylabel('Average degree', fontsize='xx-large') 
+        #ax.set_title(f'Average degree as Function of Number of nodes using configuration model in {space}')   
     ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
-    plt.savefig(f"../Results/graph/Random_{measure_name}_{space}.pdf", dpi=150)
+    ax.grid(True, linestyle='-.')
+    ax.tick_params(labelcolor='k', labelsize='xx-large', width=5)
+    plt.savefig(f"../Results/graph/Random_{measure_name}_{space}.eps", format='eps')
 
     
     plt.show()
@@ -61,6 +63,9 @@ if __name__ == '__main__':
               'Olive', 'OrangeRed','Purple','Red','Salmon', 'SpringGreen',
               'Teal','Tomato','Violet']
     
+    
+    
+    
     space = 'lspace'
     mean_number_of_nodes_random = []
     mean_ave_clustering_random = []
@@ -75,7 +80,8 @@ if __name__ == '__main__':
             s = s.replace('\'','\"')
             data = json.loads(s)          
             network_measures_random.append(data)    
-      
+        
+        
         number_of_nodes_random = []
         ave_clustering_random = []
         ave_shortest_path_random = []
@@ -97,8 +103,14 @@ if __name__ == '__main__':
         mean_ave_degree_random.append(float("%.2f"% np.mean(ave_degree_random)))
         mean_number_of_edges_random.append(np.mean(number_of_edges_random))
   
-
-
+# =============================================================================
+#     
+#         sns.kdeplot(ave_shortest_path_random, label = 'Average shortest path lengh\n  from configuration model')	
+#         plt.axvline(ave_shortest_path_real, 0, color = 'r',label = 'Real value of\n Average shortest path lengh',  marker = '*',linewidth=4)	
+#         plt.legend()	
+#         plt.title(f'Average shortest path {city}')	
+#         plt.show()
+# =============================================================================
     plot_node_network_measures(mean_number_of_nodes_random,mean_ave_shortest_path_random,markers, labels,  colors,space, 'ave_shortest_path')
     
     plot_node_network_measures(mean_number_of_nodes_random,mean_ave_clustering_random,markers, labels,  colors,space, 'ave_clustering')

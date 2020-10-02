@@ -2,8 +2,6 @@ import matplotlib.pyplot as plt
 import json
 import numpy as np
 import pandas as pd
-
-    
 #%% Calculate normalized distribution
     
 def ccdf(degree_dist):
@@ -23,16 +21,16 @@ def plot_ccdfs(uniq_degs,datavecs,markers, labels, space):
     Plots in a single figure the complementary cumulative distributions
     
     '''
-    fig = plt.figure(figsize=(15,10)) 
+    fig = plt.figure(figsize=(8,6)) 
     ax = fig.add_subplot(111)
     for x_values, y_values, marker, label  in zip(uniq_degs,datavecs, markers, labels):    
-        ax.semilogy(x_values, y_values, marker, label = label, linestyle="solid") 
+        ax.loglog(x_values, y_values, marker, label = label, linestyle="solid") 
 
     ax.set_xlabel('Degree' ) 
     ax.set_ylabel('1-CDF degree') 
-    ax.legend(loc='best')
+    ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0., fancybox=True)
     ax.set_title(f'Degree distribution in {space}')
-    plt.savefig(f"../Results/graph/Degree_distribution_semilogy_{space}.pdf", dpi=150)
+    plt.savefig(f"../Results/graph/Degree_distribution_loglog_{space}.eps", format='eps')
 
 
     plt.show()
@@ -46,20 +44,20 @@ def all_space_plot_ccdfs(uniq_degs,datavecs,markers, labels, spaces,colors):
     Plots in a single figure the complementary cumulative distributions
     
     '''
-    fig, ax = plt.subplots(1, 3, figsize=(25, 10), sharey = True)  
+    fig, ax = plt.subplots(1, 3, figsize=(10, 8), sharey = True)  
     for i, space in enumerate(spaces):
         for x_values, y_values, marker, label ,color in zip(uniq_degs[i],datavecs[i], markers, labels,colors):    
             ax[i].loglog(x_values, y_values, marker, label = label, linestyle="solid", color = color) 
 
         ax[i].set_xlabel('Degree' ) 
         
-        ax[i].set_title(f'Complementary cumulative degree distribution in {space}')
+        ax[i].set_title(f'Complementary cumulative \n degree distribution in {space}')
     ax[0].set_ylabel('1-CDF degree') 
     box = ax[2].get_position() 
     ax[2].set_position([box.x0, box.y0, box.width * 0.8, box.height])
     ax[2].legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
-    plt.savefig(f"../Results/graph/Degree_distribution_loglog.pdf", dpi=150)
+    plt.savefig("../Results/graph/Degree_distribution_loglog.eps", format='eps')
 
 
     plt.show()
@@ -84,7 +82,7 @@ def plot_degree_clustering(degrees,clusteringvec, markers, labels,space):
     ax.set_title(f'Clustering coefficient in {space}')
 
     ax.legend(loc='best')
-    plt.savefig(f"../Results/graph/Clustering_coefficient_degree_{space}.pdf", dpi=150)
+    plt.savefig(f"../Results/graph/Clustering_coefficient_degree_{space}.eps", format='eps')
 
     plt.show()
     return fig
@@ -103,7 +101,7 @@ def plot_node_network_measures(number_of_nodes,network_measures,markers, labels,
     Plots in a single figure network measures as function of node for each city 
     
     '''
-    fig = plt.figure(figsize=(15,10)) 
+    fig = plt.figure(figsize=(8,8)) 
     ax = fig.add_subplot(111)
     box = ax.get_position()
     ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
@@ -114,18 +112,20 @@ def plot_node_network_measures(number_of_nodes,network_measures,markers, labels,
     ax.set_xlabel('Number Of Nodes' ) 
     if measure_name == 'ave_clustering':
         ax.set_ylabel('Average Clustering Coefficient') 
-        ax.set_title(f'Clustering Coefficient as Function of Number of nodes  in {space}')
+        #ax.set_title(f'Clustering Coefficient as Function of Number of nodes  in {space}')
     if measure_name == 'ave_shortest_path':
         ax.set_ylabel('Average Shortest Path') 
-        ax.set_title(f'Average Shortest Path as Function of Number of nodes  in {space}')
+        #ax.set_title(f'Average Shortest Path as Function of Number of nodes  in {space}')
     if measure_name =='assortativity': 
         ax.set_ylabel('Assortativity') 
-        ax.set_title(f'Assortativity as Function of Number of nodes  in {space}')  
+       # ax.set_title(f'Assortativity as Function of Number of nodes  in {space}')  
     if measure_name == 'ave_degree':
         ax.set_ylabel('Average degree') 
-        ax.set_title(f'Average degree as Function of Number of nodes  in {space}')   
+       # ax.set_title(f'Average degree as Function of Number of nodes  in {space}')   
     ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
-    plt.savefig(f"../Results/graph/{measure_name}_{space}.pdf", dpi=150)
+    ax.grid(True, linestyle='-.')
+    ax.tick_params(labelcolor='k', labelsize='xx-large', width=5)
+    plt.savefig(f"../Results/graph/{measure_name}_{space}.eps", format='eps')
 
 
     plt.show()
@@ -138,29 +138,30 @@ def all_space_plot_node_network_measures(number_of_nodes,measure,markers, labels
     Plots in a single figure network measures as function of node for each city 
     
     '''
-    fig, ax = plt.subplots(1, 3, figsize=(25, 10))  
+    fig, ax = plt.subplots(1, 3, figsize=(15, 10))  
     for i, space in enumerate(spaces):
         for x_values, y_values, marker, label ,color  in zip(number_of_nodes,measure[i], markers, labels,colors):    
             ax[i].plot(x_values, y_values, marker, label = label, markersize=12, color = color) 
-        ax[i].set_xlabel('Number Of Nodes' )         
-        
+        ax[i].set_xlabel('Number Of Nodes', fontsize='xx-large' )         
+        ax[i].grid(True, linestyle='-.')
+        ax[i].tick_params(labelcolor='k', labelsize='xx-large', width=5)
         if measure_name == 'ave_clustering':
-            ax[0].set_ylabel('Average Clustering Coefficient') 
+            ax[0].set_ylabel('Average Clustering Coefficient', fontsize='xx-large') 
             ax[i].set_title(f'Clustering Coefficient as Function of \n Number of nodes  in {space}')
         if measure_name == 'ave_shortest_path':
-            ax[0].set_ylabel('Average Shortest Path') 
+            ax[0].set_ylabel('Average Shortest Path', fontsize='xx-large') 
             ax[i].set_title(f'Average Shortest Path as Function of \n Number of nodes  in {space}')
         if measure_name =='assortativity': 
-            ax[0].set_ylabel('Assortativity') 
+            ax[0].set_ylabel('Assortativity', fontsize='xx-large') 
             ax[i].set_title(f'Assortativity as Function of \n Number of nodes  in {space}')  
         if measure_name == 'ave_degree':
-            ax[0].set_ylabel('Average degree') 
+            ax[0].set_ylabel('Average degree', fontsize='xx-large') 
             ax[i].set_title(f'Average degree as Function of \n Number of nodes  in {space}')   
     box = ax[2].get_position() 
     ax[2].set_position([box.x0, box.y0, box.width * 0.8, box.height])
-    ax[2].legend(loc='center left', bbox_to_anchor=(1, 0.5))
+    ax[2].legend(loc='center left', bbox_to_anchor=(1, 0.5),prop={'size': 15})
 
-    plt.savefig(f"../Results/graph/all_space_{measure_name}.pdf", dpi=150)
+    plt.savefig(f"../Results/graph/all_space_{measure_name}.eps", format='eps')
     
     plt.show()
 
@@ -226,8 +227,8 @@ if __name__ == '__main__':
         all_space_cities_assortativity.append(cities_assortativity )
         all_space_ave_degree.append(ave_degree )
             
-        plot_ccdfs(uniq_degs,normalized_deg_dists, markers,labels,space)
-        plot_degree_clustering(degree_dist_cities,cities_clustering,markers, labels,space)
+       # plot_ccdfs(uniq_degs,normalized_deg_dists, markers,labels,space)
+       # plot_degree_clustering(degree_dist_cities,cities_clustering,markers, labels,space)
             
         plot_node_network_measures(number_of_nodes,ave_shortest_path,markers, labels,  colors,space, 'ave_shortest_path')       
         
