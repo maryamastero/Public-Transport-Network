@@ -76,7 +76,7 @@ if __name__ == "__main__":
     markers = ['o'	,'v'	,'^','<','>'	,'s'	,'p'	,'*'	
                ,'h'	,'H'	,'+'	,'x'	,'D'	,'d'	,'8' , 'P','X',
                'o'	,'v'	,'^','<','>'	,'s'	,'p'	,'*'	,'h'	,'H']
-    features = ['nodes','edges','clustering','degree','shortest path','assortativity']
+    features = ['nodes','edges','clustering','degree','shortest path','assortativity','diameter']
 
     spaces = ['lspace','pspace','cspace']
     
@@ -108,6 +108,7 @@ if __name__ == "__main__":
     all_space_ave_degree = []
     all_space_number_of_nodes = []
     all_space_number_of_edges = []    
+    all_space_Network_diameter = []
     network_measures = [measures_lspace ,measures_pspace,measures_cspace]
     for i, space in enumerate(spaces):
         number_of_nodes = []
@@ -120,6 +121,7 @@ if __name__ == "__main__":
         cities_assortativity = []
         ave_degree = []
         number_of_edges = []
+        Network_diameter = []
         for j in range(len(network_measures[i])):
             number_of_nodes.append(int(network_measures[i][j]['Number of nodes'])) 
             number_of_edges.append(int(network_measures[i][j]['Number of edges']))
@@ -127,6 +129,8 @@ if __name__ == "__main__":
             ave_shortest_path.append(float(network_measures[i][j]['Average shortest path']))
             ave_degree.append(float(network_measures[i][j]['Average degree']))
             cities_assortativity.append(float(network_measures[i][j]['Assortativity']))
+            Network_diameter.append(network_measures[i][j]['Network diameter'])
+
              
         all_space_ave_clustering.append(ave_clustering )
         all_space_ave_shortest_path.append(ave_shortest_path )
@@ -134,38 +138,33 @@ if __name__ == "__main__":
         all_space_ave_degree.append(ave_degree )
         all_space_number_of_nodes.append(number_of_nodes)
         all_space_number_of_edges.append(number_of_edges)
-        
+        all_space_Network_diameter.append(Network_diameter)
+
     lspace_df = pd.DataFrame(list(zip(all_space_number_of_nodes[:][0],
                               all_space_number_of_edges[:][0],
                               all_space_ave_clustering[:][0],
                                   all_space_ave_degree[:][0],
                                   all_space_ave_shortest_path[:][0],
-                                  all_space_assortativity[:][0])),
-                         columns=features)
+                                  all_space_assortativity[:][0],
+                                  all_space_Network_diameter[:][0])),columns=features)
     
     fig,ax = render_mpl_table(lspace_df, header_columns=0, col_width=2.0)
-    fig.savefig("../Results/graph/lspace_representation_datafram.png")   
-    lspace_df.to_csv('../Results/lspace_representation_df.csv',encoding='utf-8', index=False)
-    
+   
     
     pspace_df = pd.DataFrame(list(zip(all_space_number_of_nodes[:][1],
                               all_space_number_of_edges[:][1],
                               all_space_ave_clustering[:][1],
                                   all_space_ave_degree[:][1],
                                   all_space_ave_shortest_path[:][1],
-                                  all_space_assortativity[:][1])),
-                         columns= features)
-    pspace_df.to_csv('../Results/pspace_representation_df.csv',encoding='utf-8', index=False)
+                                  all_space_assortativity[:][1],
+                                  all_space_Network_diameter[:][1])),columns= features)
     fig,ax = render_mpl_table(pspace_df, header_columns=0, col_width=2.0)
-    fig.savefig("../Results/graph/pspace_representation_datafram.png")   
     
     cspace_df = pd.DataFrame(list(zip(all_space_number_of_nodes[:][2],
                               all_space_number_of_edges[:][2],
                               all_space_ave_clustering[:][2],
                                   all_space_ave_degree[:][2],
                                   all_space_ave_shortest_path[:][2],
-                                  all_space_assortativity[:][2])),
-                         columns= features)
-    cspace_df.to_csv('../Results/cspace_representation_df.csv',encoding='utf-8', index=False)
+                                  all_space_assortativity[:][2],
+                                  all_space_Network_diameter[:][2])),columns= features)
     fig,ax = render_mpl_table(cspace_df, header_columns=0, col_width=2.0)
-    fig.savefig("../Results/graph/cspace_representation_datafram.png")   
