@@ -1,6 +1,9 @@
 import random
 import matplotlib.pyplot as plt
 import networkx as nx
+import random
+import json
+
 
 n = 100
 
@@ -38,64 +41,66 @@ def get_starting_node(degree_dict):
    return s
 
 
-def get_highest_degree_neighbor(degree_dict,visited_points,all_directions):
-  highest_degree_neighbors = []
-  updated_degree_dict = {k:v for k,v in degree_dict.items() if k in all_directions}
-
-  for point in all_directions:
-    if point not in visited_points:
-      if updated_degree_dict[point] == max(updated_degree_dict.values()):
-                highest_degree_neighbors.append(point)
-
-  if len(highest_degree_neighbors) > 1:
-     n = random.choice(highest_degree_neighbors)
-
-  else:
-    n =  highest_degree_neighbors[0]
-  return n
+def get_highest_degree_neighbor(degree_dict,not_visited_directions,all_directions):
+  updated_degree_dict0 = {k:v for k,v in degree_dict.items() if k in all_directions}
+  updated_degree_dict = {k:v for k,v in updated_degree_dict0.items() if k in not_visited_directions}
+  probaility_dic = {k:v/sum(updated_degree_dict.values()) for k,v in updated_degree_dict.items()}
+  point_pr = probaility_dic.values()
+  points = probaility_dic.keys()
+  next_point = random.choices( list(points), weights= list(point_pr), k=1)
+                              
+  return next_point[0]
 
 
-def saw_prefrentional(N):
-    Nsteps = range(N)
-    # Need to be in a for for m routes
-    flag = 1
-    degree_dict = get_degree_dict(n)
-    while flag:
-      flag = 0
-      current_position = get_starting_node(degree_dict) 
-      visited_points = []
-      for i in Nsteps:
-          visited_points.append(current_position)
-          all_directions = get_possible_directions(current_position)
-          not_visited_directions = [direction for direction in all_directions if direction not in visited_points]
-          if not_visited_directions:
-            current_position = get_highest_degree_neighbor(degree_dict,visited_points,not_visited_directions)
-          else:
-              flag = 1
-              break
-              
-    xp, yp = zip(*visited_points)
-    return xp, yp 
+def saw_prefrentional(Number_of_steps , Number_of_routes):
+    Nsteps = range(Number_of_steps)
+    all_visited_points = []
+    
+    for route in range(Number_of_routes):
+        flag = 1
+        degree_dict = get_degree_dict(n)
+        while flag:
+          flag = 0
+          current_position = get_starting_node(degree_dict) 
+          visited_points = []
+          for i in Nsteps:
+              visited_points.append(current_position)
+              all_directions = get_possible_directions(current_position)
+              not_visited_directions = [direction for direction in all_directions if direction not in visited_points]
+              if not_visited_directions:
+                current_position = get_highest_degree_neighbor(degree_dict,not_visited_directions,all_directions)
+              else:
+                  flag = 1
+                  break
+                  
+        all_visited_points.append(visited_points)
+       
+        
+    temp_file = open(f"../Results/model_{Number_of_steps}_{Number_of_routes}.json", "w")
+    json.dump(all_visited_points, temp_file)
+    temp_file.close()
+    
+    return all_visited_points
 
-def plot_saw_prefrentional(N):
-    n_routes = 10
+
+def plot_saw_prefrentional(Number_of_steps , Number_of_routes):       
+    plt.figure(figsize = (8, 8))    
+    all_routes_points  = saw_prefrentional(Number_of_steps , Number_of_routes)
     xs = []
     ys = []
-    
-    plt.figure(figsize = (8, 8))
-    for route in range(n_routes):
-        x, y  = saw_prefrentional(N)
-        xs.append(x)
-        ys.append(y)
+    for route in all_routes_points:
+            x_r,y_r = zip(*route)
+            xs.append(x_r)
+            ys.append(y_r)
     
     for x, y in zip(xs,ys):    
         plt.plot(x, y)
 
     plt.axis('equal')
-    plt.title('SAW of length ' + str(N), fontsize=14, fontweight='bold')
+    plt.title('SAW of length ' + str(Number_of_steps) +' with \n '+str(Number_of_routes) +' routes', fontsize=14, fontweight='bold')
     plt.savefig("../Results/graph/model.pdf", format='pdf')
     plt.show()
     
 if __name__ == "__main__":
 
-    plot_saw_prefrentional(200)
+    plot_saw_prefrentional(100,20)

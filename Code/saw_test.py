@@ -41,41 +41,43 @@ def get_starting_node(degree_dict):
    return s
 
 
-def get_highest_degree_neighbor(degree_dict,visited_points,all_directions):
-  highest_degree_neighbors = []
-  updated_degree_dict = {k:v for k,v in degree_dict.items() if k in all_directions}
+def get_highest_degree_neighbor(degree_dict,not_visited_directions,all_directions):
+  updated_degree_dict0 = {k:v for k,v in degree_dict.items() if k in all_directions}
+  updated_degree_dict = {k:v for k,v in updated_degree_dict0.items() if k in not_visited_directions}
+  probaility_dic = {k:v/sum(updated_degree_dict.values()) for k,v in updated_degree_dict.items()}
+  point_pr = probaility_dic.values()
+  points = probaility_dic.keys()
+  next_point = random.choices( list(points), weights= list(point_pr), k=1)
+                              
+  return next_point[0]
 
-  for point in all_directions:
-    if point not in visited_points:
-      if updated_degree_dict[point] == max(updated_degree_dict.values()):
-                highest_degree_neighbors.append(point)
+Number_of_steps = 10
+Number_of_routes = 5
 
-  if len(highest_degree_neighbors) > 1:
-     n = random.choice(highest_degree_neighbors)
+Nsteps = range(Number_of_steps)
+all_visited_points = []
 
-  else:
-    n =  highest_degree_neighbors[0]
-  return n
-
-N = 10
-Nsteps = range(N)
-# Need to be in a for for m routes
-flag = 1
-degree_dict = get_degree_dict(n)
-while flag:
-  flag = 0
-  current_position = get_starting_node(degree_dict) 
-  visited_points = []
-  for i in Nsteps:
-      visited_points.append(current_position)
-      all_directions = get_possible_directions(current_position)
-      not_visited_directions = [direction for direction in all_directions if direction not in visited_points]
-      if not_visited_directions:
-        current_position = get_highest_degree_neighbor(degree_dict,visited_points,not_visited_directions)
-      else:
-          flag = 1
-          break
-          
-xp, yp = zip(*visited_points)
-
-
+for route in range(Number_of_routes):
+    flag = 1
+    degree_dict = get_degree_dict(n)
+    while flag:
+      flag = 0
+      current_position = get_starting_node(degree_dict) 
+      visited_points = []
+      for i in Nsteps:
+          visited_points.append(current_position)
+          all_directions = get_possible_directions(current_position)
+          not_visited_directions = [direction for direction in all_directions if direction not in visited_points]
+          if not_visited_directions:
+            current_position = get_highest_degree_neighbor(degree_dict,not_visited_directions,all_directions)
+          else:
+              flag = 1
+              break
+              
+    all_visited_points.append(visited_points)
+xs = []
+ys = []
+for route in all_visited_points:
+        x_r,y_r = zip(*route)
+        xs.append(x_r)
+        ys.append(y_r)
