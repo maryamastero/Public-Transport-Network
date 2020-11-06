@@ -1,6 +1,7 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
+import numpy as np
 
 def make_proxy(clr, mappable, **kwargs):
     return Line2D([0, 1], [0, 1], color=clr, **kwargs)
@@ -80,3 +81,14 @@ labels =['Routes']
 ax1.legend(handles, labels, loc='center left')
 ax1.add_artist(legend)
 plt.savefig("../Results/graph/cspace_representation.pdf", dpi=150)
+
+
+network = G
+nodes = network.nodes()
+degrees = nx.degree_centrality(network)
+betweenness = nx.betweenness_centrality(network, normalized=True)
+closeness = nx.closeness_centrality(network)
+   
+degree1 = np.array([v for k, v in  sorted(degrees.items(), key=lambda pair: list(nodes).index(pair[0]))])
+betweenness1 =np.array([v for k, v in  sorted(betweenness.items(), key=lambda  item: item[1], reverse = True)])
+closeness1 = np.array([v for k, v in  sorted(closeness.items(), key=lambda  item: item[1], reverse = True)])

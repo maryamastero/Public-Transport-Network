@@ -5,7 +5,7 @@ import random
 import json
 
 
-n = 100
+n = 300
 
 def get_possible_directions(point):
     
@@ -83,24 +83,8 @@ def saw_prefrentional(Number_of_steps , Number_of_routes):
     return all_visited_points
 
 
-def plot_saw_prefrentional(Number_of_steps , Number_of_routes):       
-    plt.figure(figsize = (8, 8))    
-    all_routes_points  = saw_prefrentional(Number_of_steps , Number_of_routes)
-    xs = []
-    ys = []
-    for route in all_routes_points:
-            x_r,y_r = zip(*route)
-            xs.append(x_r)
-            ys.append(y_r)
-    
-    for x, y in zip(xs,ys):    
-        plt.plot(x, y)
-
-    plt.axis('equal')
-    plt.title('SAW of length ' + str(Number_of_steps) +' with \n '+str(Number_of_routes) +' routes', fontsize=14, fontweight='bold')
-    plt.savefig(f"../Results/graph/model_{Number_of_steps}_{Number_of_routes}.pdf", format='pdf')
-    plt.show()
-    
 if __name__ == "__main__":
-
-    plot_saw_prefrentional(200,20)
+    
+    Number_of_steps = 300
+    Number_of_routes = 27
+    saw_prefrentional(Number_of_steps , Number_of_routes)

@@ -3,9 +3,10 @@ import json
 
 import matplotlib.pyplot as plt
 
-
+Number_of_steps = 200
+Number_of_routes = 20
 points = []
-with open('../Results/model_50.json', 'r') as f:
+with open(f'../Results/model_lspace/model_{Number_of_steps}_{Number_of_routes}.json', 'r') as f:
      points.append(json.load(f))
      
 plt.figure(figsize = (8, 8))    
@@ -20,6 +21,6 @@ for x, y in zip(xs,ys):
     plt.plot(x, y)
 
 plt.axis('equal')
-plt.title('hi you')
+plt.title('SAW of length ' + str(Number_of_steps) +' with \n '+str(Number_of_routes) +' routes', fontsize=14, fontweight='bold')
 
 plt.show()
