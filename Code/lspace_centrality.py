@@ -62,15 +62,15 @@ def create_network(city):
 
 #%%
 def get_centrality_measures(city):
-    centrality_measures = {}
     network = create_network(city)
-    centrality_measures['betweenness'] = nx.betweenness_centrality(network, normalized=True)
-    centrality_measures['closeness'] = nx.closeness_centrality(network)
-    temp_file = open(f"../Results/lspace/centrality_{city}.json", "w")
-    json.dump(centrality_measures, temp_file)
+    betweenness = nx.betweenness_centrality(network, normalized=True)
+    betweenness =np.array([v for k, v in  betweenness.items()])
+
+    temp_file = open(f"../Results/lspace/betweenness_{city}.json", "w")
+    json.dump(betweenness, temp_file)
     temp_file.close()
     
-    return  centrality_measures
+    return  betweenness
 
 #%% lspace calculation for whole data set 
 
@@ -78,12 +78,12 @@ if __name__ == '__main__':
     
     cities = get_list_cities_names() 
     
-    c_measures = {}
+    b_measures = {}
     for city in cities:
-        c_measures[city] = get_centrality_measures(city)
+        b_measures[city] = get_centrality_measures(city)
   
 #%% Making jon file for outputs:
 
-    c_measures_file = open("../Results/network_centrality_measures_lspace.json", "w")
-    json.dump(c_measures, c_measures_file)
-    c_measures_file.close()
+    b_measures_file = open("../Results/network_centrality_measures_lspace.json", "w")
+    json.dump(b_measures, b_measures_file)
+    b_measures_file.close()
