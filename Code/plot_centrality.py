@@ -3,7 +3,7 @@ import json
 import numpy as np
 import pandas as pd
 from scipy.stats import pearsonr
-
+import seaborn as sns
 #%% List of 27 cities
 def get_list_cities_names():
     cities = ['adelaide', 'antofagasta', 'athens', 'belfast', 'berlin', 'bordeaux', 'brisbane', 'canberra',
@@ -178,10 +178,15 @@ if __name__ == '__main__':
     for j in range(len(network_measures_pspace[0])):
         ave_shortest_path_pspace.append(float(network_measures_pspace[0][j]['Average shortest path']))
         degree_dist_pspace.append(network_measures_pspace[0][j]['Degree distribution'])
-        
+    
+    nodes_l = []
+    edges_l = []
     degree_dist_lspace = []
     for j in range(len(all_data_lspace[0])):
         degree_dist_lspace.append(all_data_lspace[0][j]['Degree distribution'])
+        nodes_l.append(all_data_lspace[0][j]['Number of nodes'])
+        edges_l.append(all_data_lspace[0][j]['Number of edges'])
+        
     
     network_measures_lspace = []
     with open('../Results/lspace_centrality/network_centrality_measures_lspace.json', 'r') as f:
@@ -200,6 +205,9 @@ if __name__ == '__main__':
     p_coef_b = []
     p_coef_c = []
     p_coef_d = []
+    p_coef_bl = []
+    p_coef_cl = []
+
     for n_city in range(len(cities)):
         #plot_degree_betweenness_one_city(n_city,degree_dist_pspace,closeness_lspace)
         #plot_degree_degree_one_city(n_city,degree_dist_pspace,degree_dist_lspace)
@@ -208,11 +216,78 @@ if __name__ == '__main__':
         p_coef_b.append(get_pearson_coef(n_city,degree_dist_pspace,betweenness_lspace))
         p_coef_c.append(get_pearson_coef(n_city,degree_dist_pspace,closeness_lspace))
         p_coef_d.append(get_pearson_coef(n_city,degree_dist_pspace,degree_dist_lspace))
+        p_coef_bl.append(get_pearson_coef(n_city,degree_dist_lspace,betweenness_lspace))
+        p_coef_cl.append(get_pearson_coef(n_city,degree_dist_lspace,closeness_lspace))
 
 
 
 
-    features = ['City','D_P, B_L', 'D_P, C_L', 'D_P, D_L']
-    df = pd.DataFrame(list(zip(cities,p_coef_b,p_coef_c, p_coef_d)),columns= features)
-    fig,ax = render_mpl_table(df, header_columns=0, col_width=2.0)
-    fig.savefig("../Results/graph4/datafram.png")
+    features = ['City','D_P, B_L','D_L, B_L', 'D_P, C_L','D_L, C_L', 'D_P, D_L']
+    df_table = pd.DataFrame(list(zip(cities,p_coef_b, p_coef_bl,p_coef_c,p_coef_cl, p_coef_d)),columns= features)
+    fig,ax = render_mpl_table(df_table, header_columns=0, col_width=2.0)
+    plt.show()
+   # fig.savefig("../Report/datafram.png")
+    features2 = ['City','Nodes','L_space Edges','D_P, B_L','D_L, B_L', 'D_P, C_L','D_L, C_L', 'D_P, D_L']
+    df = pd.DataFrame(list(zip(cities,nodes_l,edges_l,p_coef_b, p_coef_bl,p_coef_c,p_coef_cl, p_coef_d)),columns= features2)
+   
+    plt.scatter(range(1,28),sorted(df['D_P, B_L']),label = 'P-space degree vs Betweenness')
+    plt.scatter(range(1,28),sorted(df['D_L, B_L']),label = 'L-space degree vs Betweenness')
+    plt.scatter(range(1,28),sorted(df[ 'D_P, C_L']),label = 'P-space degree vs Clossness')
+    plt.scatter(range(1,28),sorted(df[ 'D_L, C_L']),label = 'L-space degree vs Clossness')
+    plt.scatter(range(1,28),sorted(df['D_P, D_L']),label = 'P-space degree vs L-space degree')
+    plt.legend(loc='center left', bbox_to_anchor=(1, 0.5),prop={'size': 15})
+    plt.title('Sorted values')
+    plt.show()
+    
+    
+    plt.scatter(range(1,28),df['D_P, B_L'],label = 'P-space degree vs Betweenness')
+    plt.scatter(range(1,28),df['D_L, B_L'],label = 'L-space degree vs Betweenness')
+    plt.scatter(range(1,28),df[ 'D_P, C_L'],label = 'P-space degree vs Clossness')
+    plt.scatter(range(1,28),df[ 'D_L, C_L'],label = 'L-space degree vs Clossness')
+    plt.scatter(range(1,28),df['D_P, D_L'],label = 'P-space degree vs L-space degree')
+    plt.legend(loc='center left', bbox_to_anchor=(1, 0.5),prop={'size': 15})
+
+    plt.title('Pure values')
+    plt.show()
+    
+  
+    
+    
+    max_dic = {'max nodes' : df['City'][df['Nodes'].idxmax()], 
+                'max Degree P-space - Betweenness':df['City'][df['D_P, B_L'].idxmax()],
+                'max Degree L-space - Betweenness':df['City'][df['D_L, B_L'].idxmax()],
+                'max Degree P-space - Closeness':df['City'][df['D_P, C_L'].idxmax()],
+                'max Degree L-space - Closeness':df['City'][df['D_L, B_L'].idxmax()],
+                'max Degree P-space - Degree L-space':df['City'][df['D_P, D_L'].idxmax()]}
+
+    
+    
+    min_dic = {'min nodes' : df['City'][df['Nodes'].idxmin()], 
+                'min Degree P-space - Betweenness':df['City'][df['D_P, B_L'].idxmin()],
+                'min Degree L-space - Betweenness':df['City'][df['D_L, B_L'].idxmin()],
+                'min Degree P-space - Closeness':df['City'][df['D_P, C_L'].idxmin()],
+                'min Degree L-space - Closeness':df['City'][df['D_L, B_L'].idxmin()],
+                'min Degree P-space - Degree L-space':df['City'][df['D_P, D_L'].idxmin()]}
+
+  #  plt.figure(figsize=(10, 20))
+    heatmap = sns.heatmap(df[['D_P, B_L','D_L, B_L', 'D_P, C_L','D_L, C_L', 'D_P, D_L']], cmap="YlOrRd")#, square=True)
+    heatmap.set_yticklabels(cities,rotation=0) 
+    heatmap.set_xticklabels(heatmap.get_xticklabels(), rotation=0)    
+    plt.setp(ax.get_yticklabels(), ha="center")
+    plt.xlabel("Pearson Correlation Coefficient ")
+    plt.ylabel("Cities") 
+    plt.tight_layout()
+    plt.savefig("../Results/graph5/heatmap2.pdf", format='pdf')
+    plt.show()
+
+
+
+
+
+
+
+
+
+
+    
+    
